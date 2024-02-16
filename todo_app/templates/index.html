@@ -2,17 +2,56 @@
 {% block title %}To-Do App{% endblock %}
 
 {% block content %}
-  <div class="jumbotron">
-    <h1 class="display-4">To-Do App</h1>
-    <p class="lead">Just another to-do app.</p>
-  </div>
+<div class="jumbotron">
+  <h1 class="display-4">To-Do App</h1>
+  <p class="lead">Just another to-do app.</p>
+</div>
 
-  <div class="row">
-    <div class="col-md-12">
+<div class="row">
+  <div class="col-md-12">
+    <table class="table">
       <h2>Items</h2>
-      <ul class="list-group mb-4">
-        <!-- List the todo items here -->
-      </ul>
-    </div>
+      <thead>
+        <tr>
+          <th scope="col">Task</th>
+          <th scope="col">Status</th>
+          <th scope="col"></th>
+          <th scope="col"></th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for item in items %}
+        <td>{{ item.title }}</td>
+        <td>{{ item.status }}</td>
+        <td>
+          <form action="/update_task" method="post">
+            <input name="id" value="{{ item.id }}" hidden />
+            <input name="title" value="{{ item.title }}" hidden />
+            <input name="status" value="{{ 'Completed' if item.status == 'Not Started' else 'Not Started' }}" hidden />
+            <button class="btn btn-outline-primary" type="submit">
+              {% if item.status == "Not Started"%}
+                Mark completed
+              {% else %}
+                Mark incomplete
+              {% endif %}
+            </button>
+          </form>
+        </td>
+        <td>
+          <form action="/remove_task?id={{ item.id }}" method="post">
+            <button class="btn btn-danger" type="submit">
+              Remove Item
+            </button>
+          </form>
+        </td>
+      </tbody>
+      {% endfor %}
+    </table>
   </div>
+</div>
+<form action="/add_item" method="post">
+  <label for="item">Add new item</label><br>
+  <input type="text" id="item" name="item">
+  <input type="submit" value="Add item">
+</form>
 {% endblock %}
