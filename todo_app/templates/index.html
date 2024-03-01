@@ -21,12 +21,12 @@
       </thead>
       <tbody>
         {% for item in items %}
-        <td>{{ item.title }}</td>
+        <td>{{ item.name }}</td>
         <td>{{ item.status }}</td>
         <td>
           <form action="/update_task" method="post">
             <input name="id" value="{{ item.id }}" hidden />
-            <input name="title" value="{{ item.title }}" hidden />
+            <input name="name" value="{{ item.name }}" hidden />
             <input name="status" value="{{ 'Completed' if item.status == 'Not Started' else 'Not Started' }}" hidden />
             <button class="btn btn-outline-primary" type="submit">
               {% if item.status == "Not Started"%}
