@@ -20,23 +20,45 @@
         </tr>
       </thead>
       <tbody>
-        {% for item in items %}
+        {% for item in view_model.items %}
         <td>{{ item.name }}</td>
         <td>{{ item.status }}</td>
+        {% if item.status != 'Not Started' %}
         <td>
-          <form action="/update_task" method="post">
+          <form action="/set_not_started" method="post">
             <input name="id" value="{{ item.id }}" hidden />
             <input name="name" value="{{ item.name }}" hidden />
-            <input name="status" value="{{ 'Completed' if item.status == 'Not Started' else 'Not Started' }}" hidden />
+            <input name="status" value="Not Started" hidden />
             <button class="btn btn-outline-primary" type="submit">
-              {% if item.status == "Not Started"%}
-                Mark completed
-              {% else %}
-                Mark incomplete
-              {% endif %}
+              Mark not started
             </button>
           </form>
         </td>
+        {% endif %}
+        {% if item.status != 'In Progress' %}
+        <td>
+          <form action="/set_in_progress" method="post">
+            <input name="id" value="{{ item.id }}" hidden />
+            <input name="name" value="{{ item.name }}" hidden />
+            <input name="status" value="In Progress" hidden />
+            <button class="btn btn-outline-primary" type="submit">
+              Mark in progress
+            </button>
+          </form>
+        </td>
+        {% endif %}
+        {% if item.status != 'Completed' %}
+        <td>
+          <form action="/set_complete" method="post">
+            <input name="id" value="{{ item.id }}" hidden />
+            <input name="name" value="{{ item.name }}" hidden />
+            <input name="status" value="Completed" hidden />
+            <button class="btn btn-outline-primary" type="submit">
+                Mark completed
+            </button>
+          </form>
+        </td>
+        {% endif %}
         <td>
           <form action="/remove_task?id={{ item.id }}" method="post">
             <button class="btn btn-danger" type="submit">
