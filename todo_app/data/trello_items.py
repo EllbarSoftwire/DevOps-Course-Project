@@ -13,7 +13,7 @@ class Item:
     self.status = status
   
   def from_trello_card(cls, card):
-    return cls(card['id'], card['name'],  ("Completed" if card["idList"] == os.getenv("TRELLO_FINISHED_LIST_ID") else "Not Started"))
+    return cls(card['id'], card['name'],  _get_status_from_list_id(card["idList"]))
 
 def get_base_query():
   return {
@@ -41,23 +41,43 @@ def add_item(title):
     params=query
   )
 
+def _get_status_from_list_id(list):
+  if list == os.getenv("TRELLO_FINISHED_LIST_ID"):
+    return "Completed"
+  if list == os.getenv("TRELLO_IN_PROGRESS_LIST"):
+    return "In Progress"
+  if list == os.getenv("TRELLO_NOT_STARTED_LIST_ID"):
+    return "Not Started"
+  return "Other"
+
 def get_items():
-  url = f"{get_api_url()}/boards/{os.getenv("TRELLO_BOARD_ID")}/cards"
-  response = requests.request(
-    "GET",
+  id = os.getenv("TRELLO_BOARD_ID")
+  url = f"{get_api_url()}/boards/{id}/cards"
+  response = requests.get(
     url,
     headers=get_headers(),
     params=get_base_query()
   )
   items = []
-  body = json.loads(response.text)
+  body = response.json()
   for card in body:
-    items.append(Item(card["id"], card["name"], "Completed" if card["idList"] == os.getenv("TRELLO_FINISHED_LIST_ID") else "Not Started"))
+    items.append(Item(
+      card["id"],
+      card["name"], 
+      _get_status_from_list_id(card["idList"])))
   return items
 
-def update_item(item):
+def set_complete(item):
+  _update_item(item, os.getenv("TRELLO_FINISHED_LIST_ID"))
+
+def set_in_progress(item):
+  _update_item(item, os.getenv("TRELLO_IN_PROGRESS_LIST"))
+
+def set_not_started(item):
+  _update_item(item, os.getenv("TRELLO_NOT_STARTED_LIST_ID"))
+
+def _update_item(item, idList):
   url = f"{get_api_url()}/cards/{item.id}"
-  idList = os.getenv("TRELLO_FINISHED_LIST_ID") if item.status == "Completed" else os.getenv("TRELLO_NOT_STARTED_LIST_ID")
   query = get_base_query() | {
     "name": item.name,
     "idList": idList
