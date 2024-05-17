@@ -1,0 +1,94 @@
+- name: Update web servers
+  hosts: webservers
+  remote_user: ec2-user
+
+  vars_prompt:
+    - name: trello_api_key
+      private: true
+      prompt: "Trello API key"
+
+    - name: trello_api_secret
+      private: true
+      prompt: "Trello API secret"
+
+    - name: trello_api_token
+      private: true
+      prompt: "Trello API token"
+
+# Install dependencies
+  tasks:
+    - name: Install git
+      yum:
+        name:
+          - git
+        state: present
+      become: true
+
+    - name: Install Python 3
+      yum:
+        name:
+          - python3
+        state: present
+      become: true
+
+    - name: Install pip
+      yum:
+        name: python3-pip
+        state: present
+      become: true
+
+    - name: Install Poetry
+      shell: > 
+        curl -sSL https://install.python-poetry.org | python3 -
+      args:
+        creates: /home/ec2-user/.local/bin/poetry
+      become: true
+
+    - name: Create /opt/todoapp directory
+      file:
+        path: /opt/todoapp
+        state: directory
+        mode: '0755'  
+        owner: ec2-user  
+      become: true
+
+    - name: Checkout To-Do App code
+      git:
+        repo: https://https://github.com/EllbarSoftwire/DevOps-Course-Project 
+        dest: /opt/todoapp
+        version: module-4
+        update: yes  
+        force: yes  
+      become: true
+
+    - name: Install project dependencies using Poetry
+      shell: > 
+        /home/ec2-user/.local/bin/poetry install
+      args:
+        chdir: "/opt/todoapp"
+      become: true
+
+    - name: Create .env from template
+      template:
+        src: .env.j2
+        dest: /opt/todoapp/.env
+      become: true
+
+    - name: Copy todoapp.service file to systemd
+      copy:
+        src: todoapp.service
+        dest: /etc/systemd/system/todoapp.service
+      become: true
+
+    - name: Start systemd service
+      systemd:
+        name: todoapp
+        daemon_reload: yes
+        state: restarted
+      become: true
+
+
+
+
+
+
