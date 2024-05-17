@@ -76,3 +76,11 @@ To run one test file run:
 ```bash
 $ poetry run pytest path/to/file
 ```
+
+## Deploying with Ansible
+
+To deploy with Ansible copy the `ansible` folder to the Host node, update the `inventory.yaml` file to include the nodes
+and run
+```
+ansible-playbook playbook.yaml -i inventory.yaml
+```
