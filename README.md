@@ -100,6 +100,12 @@ To run the development environment run
 docker run --env-file ./.env -p 8000:5000 --mount "type=bind,source=$(pwd)/todo_app,target=/app/todo_app" todo-app:dev
 ```
 
+or alternatively run
+
+```bash
+docker compose up
+```
+
 To run the production environment run
 
 ```bash

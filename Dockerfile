@@ -1,10 +1,10 @@
 FROM python:3.10.14-alpine3.19 AS base
 
 RUN pip install poetry
-COPY pyproject.toml poetry.toml /todo_app/
-WORKDIR /todo_app
+WORKDIR /app
+COPY pyproject.toml poetry.toml /app/
 RUN poetry install
-COPY . .
+COPY todo_app /app/todo_app
 
 
 FROM base as prod 
