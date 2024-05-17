@@ -81,6 +81,27 @@ $ poetry run pytest path/to/file
 
 To deploy with Ansible copy the `ansible` folder to the Host node, update the `inventory.yaml` file to include the nodes
 and run
-```
+
+```bash
 ansible-playbook playbook.yaml -i inventory.yaml
+```
+
+## Running locally with Docker
+
+To build the docker container use
+
+```bash
+docker build --target <dev/prod> --tag todo-app:<dev/prod> .
+```
+
+To run the development environment run
+
+```bash
+docker run --env-file ./.env -p 8000:5000 --mount "type=bind,source=$(pwd)/todo_app,target=/app/todo_app" todo-app:dev
+```
+
+To run the production environment run
+
+```bash
+docker run --publish 8000:5000 --env-file .env todo-app:prod
 ```
