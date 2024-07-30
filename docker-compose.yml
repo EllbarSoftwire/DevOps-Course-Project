@@ -2,7 +2,9 @@ services:
   todo_app:
     image: todo_app:dev
     env_file: .env
-    build: .
+    build:
+      context: .
+      target: dev
     ports:
       - "8000:5000"
     volumes:
