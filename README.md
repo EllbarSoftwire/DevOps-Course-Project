@@ -111,3 +111,18 @@ To run the production environment run
 ```bash
 docker run --publish 8000:5000 --env-file .env todo-app:prod
 ```
+
+## Deployment
+
+Container hosted here: https://hub.docker.com/repository/docker/elliotbarnes/todo-app/general
+Website hosted here: http://ellbar-devops-todo-app.azurewebsites.net/
+
+To deploy first build the container
+``` 
+docker build --target prod --tag elliotbarnes/todo-app:prod .
+```
+Publish the container
+```
+docker push elliotbarnes/todo-app:prod
+```
+Then send a post request to the webhook (found on the azure portal) to repull the container
