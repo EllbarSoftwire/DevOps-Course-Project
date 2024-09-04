@@ -10,6 +10,7 @@ jobs:
     - run: docker build --target test --tag todo_app .
     - run: docker run todo_app
   deploy:
+    if: github.ref == refs/heads/main
     name: Deploy
     needs: build
     runs-on: ubuntu-latest
