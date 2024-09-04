@@ -115,7 +115,7 @@ docker run --publish 8000:5000 --env-file .env todo-app:prod
 ## Deployment
 
 Container hosted here: https://hub.docker.com/repository/docker/elliotbarnes/todo-app/general
-Website hosted here: http://ellbar-devops-todo-app.azurewebsites.net/
+Website hosted here: https://ellbar-devops-todo-app.azurewebsites.net/
 
 To deploy first build the container
 ``` 
