@@ -17,5 +17,5 @@ jobs:
     steps:
     - uses: actions/checkout@v4
     - run: docker login -u elliotbarnes -p ${{ secrets.DOCKER_TOKEN }}
-    - run: docker build --target prod --tag elliotbarnes/todo-app:prod
+    - run: docker build --target prod --tag elliotbarnes/todo-app:prod .
     - run: docker push elliotbarnes/todo-app:prod
