@@ -9,3 +9,9 @@ jobs:
     - uses: actions/checkout@v4
     - run: docker build --target test --tag todo_app .
     - run: docker run todo_app
+  deploy:
+    name: Deploy
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+    - run: echo Deploy
