@@ -16,7 +16,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
-    - run: docker login -u elliotbarnes -p ${{ secrets.DOCKER_TOKEN }}
+    - run: echo $DOCKER_TOKEN | docker login -u elliotbarnes --password-stdin
+      env: 
+        DOCKER_TOKEN: ${{ secrets.DOCKER_TOKEN }}
     - run: docker build --target prod --tag elliotbarnes/todo-app:prod .
     - run: docker push elliotbarnes/todo-app:prod
     - run: curl -dH -X POST '${{ secrets.WEBHOOK_URL }}'
